@@ -118,17 +118,44 @@ function formatMoney(amount) {
 function calculateDynamicMatchScore(pkg, briefText) {
   if (!briefText) return 94;
   const lower = briefText.toLowerCase();
-  let score = 82;
+  let score = 78;
 
-  if (lower.includes(pkg.id) || lower.includes(pkg.place.toLowerCase()) || lower.includes(pkg.country.toLowerCase())) {
-    score += 16;
+  // City and region keyword mapping for precise location matching
+  const locationAliases = {
+    pondy: ['pondicherry', 'pondy', 'puducherry', 'french quarter'],
+    goa: ['goa', 'morjim', 'assagao', 'calangute', 'baga', 'panjim'],
+    kerala: ['kerala', 'alleppey', 'backwaters', 'houseboat', 'kovalam'],
+    varkala: ['varkala', 'cliff beach', 'red sand'],
+    rajasthan: ['rajasthan', 'jaipur', 'udaipur', 'pichola', 'fort'],
+    himachal: ['himachal', 'manali', 'solang', 'rohtang', 'pine'],
+    bali: ['bali', 'ubud', 'uluwatu', 'seminyak'],
+    vietnam: ['vietnam', 'da nang', 'hoi an', 'ba na'],
+    andaman: ['andaman', 'havelock', 'port blair', 'radhanagar']
+  };
+
+  // Check if brief explicitly matches this package's location
+  const aliases = locationAliases[pkg.id] || [pkg.id, pkg.place.toLowerCase(), pkg.country.toLowerCase()];
+  const isLocationMatch = aliases.some(alias => lower.includes(alias.toLowerCase()));
+
+  if (isLocationMatch) {
+    score += 20; // Massive boost for exact destination match
+  }
+
+  // Check if brief explicitly requested another destination
+  const mentionsOtherLocation = Object.keys(locationAliases).some(key => {
+    if (key === pkg.id) return false;
+    return locationAliases[key].some(alias => lower.includes(alias.toLowerCase()));
+  });
+
+  if (mentionsOtherLocation && !isLocationMatch) {
+    score -= 18; // Penalty for unrelated cities when a specific destination was requested
   }
 
   pkg.tags.forEach(t => {
-    if (lower.includes(t.toLowerCase())) score += 4;
+    if (lower.includes(t.toLowerCase())) score += 3;
   });
 
-  return Math.min(99, score);
+  return Math.min(99, Math.max(50, score));
 }
 
 function updateHeardBanner(context) {
