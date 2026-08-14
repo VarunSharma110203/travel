@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trustpack · Your Trip Shortlist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">t</span>
+      <span>trustpack</span>
+    </a>
+    <nav class="topnav">
+      <a class="active" href="results.html">Browse trips</a>
+      <a href="index.html#why">Why trustpack</a>
+      <a href="saved.html">Saved <span class="nav-count">0</span></a>
+    </nav>
+    <button class="avatar" title="Account">AS</button>
+  </header>
+
+  <main class="results-page">
+    <a href="index.html" class="back-link">← Start a new brief</a>
+
+    <div class="refine-head">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="flex: 1;">
+          <p class="eyebrow" style="margin-bottom: 4px; justify-content: flex-start;">Search destination or refine brief</p>
+          <input class="refine-input" id="result-brief" placeholder="e.g. Goa, Bali, Kerala, Ladakh, or type 'beach under 45k'..." aria-label="Refine trip brief">
+        </div>
+        <button class="search-again" id="search-again">Search <span>→</span></button>
+      </div>
+      <!-- Quick City Filters -->
+      <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-light);" id="city-pills">
+        <span style="font-size: 11px; color: var(--text-muted); font-weight: 700; align-self: center; margin-right: 4px;">Quick Destinations:</span>
+        <button class="city-pill active" data-city="all" style="border: 1px solid var(--border-light); background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; cursor: pointer;">🌐 All</button>
+        <button class="city-pill" data-city="goa" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Goa</button>
+        <button class="city-pill" data-city="kerala" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Kerala</button>
+        <button class="city-pill" data-city="bali" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Bali</button>
+        <button class="city-pill" data-city="himachal" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Himachal</button>
+        <button class="city-pill" data-city="rajasthan" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Rajasthan</button>
+        <button class="city-pill" data-city="pondy" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Pondicherry</button>
+        <button class="city-pill" data-city="vietnam" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Vietnam</button>
+        <button class="city-pill" data-city="andaman" style="border: 1px solid var(--border-light); background: var(--bg-card); color: var(--text-muted); font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; cursor: pointer;">📍 Andaman</button>
+      </div>
+    </div>
+
+    <!-- AI Heard Banner -->
+    <div class="heard">
+      <div>
+        <p class="eyebrow" style="justify-content: flex-start; margin-bottom: 4px;">✦ AI Heard You</p>
+        <p id="heard-copy" class="heard-copy">Parsing your trip context...</p>
+      </div>
+      <div id="heard-tags" class="heard-tags"></div>
+    </div>
+
+    <!-- Smart APM Clarifying Question Card -->
+    <div id="clarifying-card" style="display: none; background: var(--accent-light); border: 1px solid #f5c6cb; border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <strong style="color: var(--accent); font-size: 13px;">✦ Quick Clarifying Question:</strong>
+          <span style="font-size: 13px; color: var(--text-dark); margin-left: 6px;">Are you open to flights or preferring a scenic road/train trip?</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button id="clarify-flight" class="primary-button" style="padding: 6px 12px; font-size: 11px; height: 32px;">✈️ Include Flights</button>
+          <button id="clarify-road" class="primary-button" style="padding: 6px 12px; font-size: 11px; height: 32px; background: var(--bg-card); color: var(--text-dark); border: 1px solid var(--border-light);">🚗 Road / Train Only</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Dynamic Context Filters -->
+    <div class="listing-context">
+      <div class="context-section">
+        <label>Guests & Rooms</label>
+        <div style="display: flex; gap: 6px;">
+          <select id="adults-control" aria-label="Adults count" style="flex: 1; border: 1px solid var(--border-light); background: var(--bg-subtle); font-family: var(--font-sans); font-size: 12px; padding: 6px; border-radius: 8px; outline: none; cursor: pointer;">
+            <option value="1">1 Adult</option>
+            <option value="2" selected>2 Adults</option>
+            <option value="3">3 Adults</option>
+            <option value="4">4 Adults</option>
+            <option value="5">5 Adults</option>
+            <option value="6">6 Adults</option>
+            <option value="8">8 Adults</option>
+          </select>
+
+          <select id="rooms-control" aria-label="Rooms count" style="flex: 1; border: 1px solid var(--border-light); background: var(--bg-subtle); font-family: var(--font-sans); font-size: 12px; padding: 6px; border-radius: 8px; outline: none; cursor: pointer;">
+            <option value="1" selected>1 Room</option>
+            <option value="2">2 Rooms</option>
+            <option value="3">3 Rooms</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="context-section">
+        <label>Vibe / Interest</label>
+        <div id="interest-options" class="mini-options">
+          <button data-vibe="all" class="selected">All Vibes</button>
+          <button data-vibe="beach">Beach</button>
+          <button data-vibe="culture">Culture</button>
+          <button data-vibe="mountains">Mountains</button>
+          <button data-vibe="nature">Nature</button>
+        </div>
+      </div>
+
+
+      <div class="context-section">
+        <label>Budget Calculation</label>
+        <div class="mini-options" style="margin-bottom: 6px;">
+          <button id="mode-total" class="selected">Total Trip</button>
+          <button id="mode-person">Per Person</button>
+        </div>
+        <div class="side-line">
+          <span>Max budget:</span>
+          <strong id="result-budget">₹150k</strong>
+        </div>
+      </div>
+
+      <div class="context-section">
+        <label for="result-range">Adjust Budget Cap</label>
+        <input id="result-range" type="range" min="15" max="250" value="250" step="5" aria-label="Budget slider">
+        <div class="range-labels">
+          <span>₹15k</span>
+          <span>₹75k</span>
+          <span>₹150k+</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-layout">
+      <!-- Sidebar Filters -->
+      <aside class="refine-side">
+        <p class="side-title">Filter Region</p>
+        <div class="region-buttons">
+          <button class="region active" data-region="all">🌍 All Destinations</button>
+          <button class="region" data-region="india">🇮🇳 India ₹</button>
+          <button class="region" data-region="global">✈️ International $</button>
+        </div>
+
+        <div class="promise-box">
+          <strong>The Trustpack Promise</strong>
+          <p>Every price is 100% all-inclusive. Flights, boutique stays, transfers, and taxes inside the number.</p>
+        </div>
+      </aside>
+
+      <!-- Results Grid -->
+      <section style="flex: 1;">
+        <div class="result-meta">
+          <span id="result-count">Searching curated packages...</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span>Sort by:</span>
+            <select id="sort-select" style="border: 1px solid var(--border-light); background: transparent; font-family: var(--font-sans); font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; outline: none; cursor: pointer;">
+              <option value="match">Best Match</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="result-list" class="result-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/trips-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="results.js"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trustpack · Saved Packages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">t</span>
+      <span>trustpack</span>
+    </a>
+    <nav class="topnav">
+      <a href="results.html">Browse trips</a>
+      <a href="index.html#why">Why trustpack</a>
+      <a class="active" href="saved.html">Saved <span class="nav-count">0</span></a>
+    </nav>
+    <button class="avatar" title="Account">AS</button>
+  </header>
+
+
+  <main class="saved-page">
+    <p class="eyebrow">✦ Your Shortlist</p>
+    <h1>Trips you’re turning over.</h1>
+    <p style="color: var(--text-muted); font-size: 14px; max-width: 540px; margin: 0 auto 36px;">
+      Everything you tagged as maybe. Saved right here on your device — no account required, zero clutter.
+    </p>
+
+    <div id="saved-container"></div>
+  </main>
+
+  <script src="js/trips-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script>
+    function renderSavedPage() {
+      const container = document.getElementById('saved-container');
+      if (!container || typeof TRIPS === 'undefined') return;
+
+      // Restore user context (adults/rooms) from last search session
+      const lastAdults = Number(sessionStorage.getItem('tp_adults') || localStorage.getItem('tp_adults') || 2);
+      const lastRooms  = Number(sessionStorage.getItem('tp_rooms')  || localStorage.getItem('tp_rooms')  || 1);
+
+      const savedIds = getSavedTripIds();
+      const savedPackages = TRIPS.filter(t => savedIds.includes(t.id));
+
+      if (savedPackages.length === 0) {
+        container.innerHTML = `
+          <div class="saved-empty">
+            <strong>Nothing saved yet.</strong>
+            <span>Find a trip that catches your eye and tap "Save for later".</span>
+            <a href="results.html" class="primary-button" style="margin-top: 16px; text-decoration: none; height: 42px;">Browse trip packages <span>→</span></a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <!-- Top bar: guest context + share + clear all -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">
+            Showing prices for <strong>${lastAdults} Adult${lastAdults > 1 ? 's' : ''}</strong>, <strong>${lastRooms} Room${lastRooms > 1 ? 's' : ''}</strong>
+            &nbsp;·&nbsp; <a href="results.html" style="color:var(--primary); font-weight:600; text-decoration:none;">Change &rarr;</a>
+          </p>
+          <div style="display: flex; gap: 8px;">
+            <button id="share-shortlist-btn" style="font-size:12px; color:var(--primary); background:var(--primary-light); border:1px solid var(--border-light); padding:6px 14px; border-radius:6px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">🔗 Share Shortlist with Squad</button>
+            <button id="clear-all-btn" style="font-size:12px; color:#c0392b; background:none; border:1px solid #fcc; padding:6px 12px; border-radius:6px; cursor:pointer;">Clear all</button>
+          </div>
+        </div>
+
+        <!-- Comparison Matrix for APM Pitch -->
+        ${savedPackages.length >= 2 ? `
+          <div style="background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 20px; margin-bottom: 32px; text-align: left; box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <h3 style="font-family: var(--font-serif); font-size: 22px; margin: 0;">Compare Saved Packages Side-by-Side</h3>
+              <span style="font-size: 11px; color: var(--primary); font-weight: 700; background: var(--primary-light); padding: 4px 8px; border-radius: 12px;">✦ Product Comparison Tool</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border-light); text-align: left;">
+                    <th style="padding: 8px; color: var(--text-muted);">Package</th>
+                    <th style="padding: 8px; color: var(--text-muted);">Total (${lastAdults} Adults)</th>
+                    <th style="padding: 8px; color: var(--text-muted);">Per Person</th>
+                    <th style="padding: 8px; color: var(--text-muted);">Logistics &amp; Flight</th>
+                    <th style="padding: 8px; color: var(--text-muted);">Stay Type</th>
+                    <th style="padding: 8px; color: var(--text-muted);">Cancellation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${savedPackages.map(pkg => {
+                    const total = pkg.perPersonPrice * lastAdults;
+                    return `
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                      <td style="padding: 10px 8px; font-weight: 700; color: var(--primary);">${pkg.name}</td>
+                      <td style="padding: 10px 8px; font-weight: 700;">₹${total.toLocaleString()}</td>
+                      <td style="padding: 10px 8px; color: var(--text-muted);">₹${pkg.perPersonPrice.toLocaleString()} p.p.</td>
+                      <td style="padding: 10px 8px;">${pkg.transport.duration} (${pkg.transport.airline})</td>
+                      <td style="padding: 10px 8px;">${pkg.stay.name}</td>
+                      <td style="padding: 10px 8px; color: var(--primary); font-weight: 600;">✓ Free up to 7 days</td>
+                    </tr>
+                  `}).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="saved-grid">
+          ${savedPackages.map(pkg => {
+            const total = pkg.perPersonPrice * lastAdults;
+            return `
+            <article class="package-card" data-id="${pkg.id}" style="cursor:pointer;">
+              <div class="package-img" style="background-image: url('${pkg.img}')">
+                <span class="match">${pkg.match} match</span>
+                <button class="card-save-btn saved" data-remove-id="${pkg.id}" title="Remove package">♥</button>
+              </div>
+              <div class="package-content">
+                <div class="package-top">
+                  <span class="verified">✓ Verified Operator</span>
+                  <div class="package-price">
+                    ₹${total.toLocaleString()}
+                    <small>total for ${lastAdults} adult${lastAdults > 1 ? 's' : ''} &middot; ₹${pkg.perPersonPrice.toLocaleString()} p.p.</small>
+                  </div>
+                </div>
+                <div class="package-place">${pkg.place} · ${pkg.days}</div>
+                <h2>${pkg.name}</h2>
+                <p>${pkg.copy}</p>
+                <div class="package-bottom" style="margin-top: auto;">
+                  <span>★ ${pkg.rating} <small>(${pkg.reviewsCount})</small></span>
+                  <a href="detail.html?id=${pkg.id}&adults=${lastAdults}&rooms=${lastRooms}" class="primary-button" style="padding: 6px 12px; font-size: 11px; text-decoration: none;" onclick="event.stopPropagation();">View details →</a>
+                </div>
+              </div>
+            </article>
+          `}).join('')}
+        </div>
+      `;
+
+      // Wire Remove Event Handlers
+      container.querySelectorAll('[data-remove-id]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.removeId;
+          toggleSaveTrip(id);
+          showToast('Package removed from your shortlist');
+          renderSavedPage();
+        });
+      });
+
+      // Wire whole-card click to detail
+      container.querySelectorAll('.package-card[data-id]').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('[data-remove-id]') || e.target.closest('a')) return;
+          location.href = `detail.html?id=${card.dataset.id}&adults=${lastAdults}&rooms=${lastRooms}`;
+        });
+      });
+
+      // Clear All
+      const clearBtn = document.getElementById('clear-all-btn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          if (confirm('Remove all saved packages from your shortlist?')) {
+            getSavedTripIds().forEach(id => toggleSaveTrip(id));
+            renderSavedPage();
+          }
+        });
+      }
+
+      // Share Shortlist button
+      const shareBtn = document.getElementById('share-shortlist-btn');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+          const shareUrl = window.location.href;
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(shareUrl);
+          }
+          const text = encodeURIComponent(`Check out our travel package shortlist on Trustpack: ${shareUrl}`);
+          if (window.innerWidth < 600) {
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+          }
+          showToast('🔗 Shortlist link copied! Share it with your travel squad 🚀');
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSavedPage();
+    });
+  </script>
+</body>
+</html>

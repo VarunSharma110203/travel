@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trustpack · A quieter way to plan travel</title>
+  <meta name="description" content="Describe your trip in plain words — vibe, budget, group — and get honest, all-in package options with zero hidden fees. Built for first-time buyers.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ─── LANDING PAGE OVERRIDES ─────────────────────────────── */
+
+    /* Hero */
+    .lp-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 24px 80px;
+      text-align: center;
+      background: linear-gradient(160deg, #f0f7f3 0%, #f9f8f3 40%, #fdf3e7 100%);
+    }
+
+    /* Ambient orbs */
+    .lp-hero::before,
+    .lp-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .lp-hero::before {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,67,50,0.07) 0%, transparent 70%);
+      top: -160px; left: -180px;
+      animation: orbFloat 10s ease-in-out infinite;
+    }
+    .lp-hero::after {
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(224,122,95,0.07) 0%, transparent 70%);
+      bottom: -120px; right: -100px;
+      animation: orbFloat 13s ease-in-out infinite reverse;
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, 20px) scale(1.05); }
+    }
+
+    .lp-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .lp-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-full);
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      animation: fadeSlideUp 0.6s ease both;
+    }
+    .lp-pill .dot {
+      width: 6px; height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    .lp-h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(44px, 7vw, 70px);
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      margin: 0 0 20px;
+      color: var(--text-dark);
+      animation: fadeSlideUp 0.7s 0.1s ease both;
+    }
+    .lp-h1 em {
+      color: var(--primary);
+      font-style: italic;
+    }
+    .lp-h1 .accent-em {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .lp-subtitle {
+      max-width: 540px;
+      margin: 0 auto 36px;
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.6;
+      animation: fadeSlideUp 0.7s 0.2s ease both;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Context / config bar */
+    .lp-context-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 8px 18px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+      animation: fadeSlideUp 0.7s 0.25s ease both;
+    }
+    .ctx-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .lp-context-row select, .lp-context-row input[type="date"] {
+      border: 0;
+      border-bottom: 1.5px solid var(--primary);
+      background: transparent;
+      color: var(--text-dark);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 11.5px;
+      padding: 2px 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    .lp-context-row input[type="date"] {
+      max-width: 105px;
+    }
+    .lp-context-row input[type="date"]::-webkit-calendar-picker-indicator {
+      opacity: 0.5;
+      cursor: pointer;
+      scale: 0.8;
+      margin-left: 2px;
+    }
+    .lp-context-row .ctx-sep {
+      color: #cbd5d0;
+      font-size: 13px;
+    }
+
+    /* Search box */
+    .lp-search-wrap {
+      animation: fadeSlideUp 0.7s 0.3s ease both;
+    }
+    .lp-search-box {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-light);
+      border-radius: 16px;
+      padding: 18px 18px 14px;
+      text-align: left;
+      box-shadow: 0 12px 40px rgba(27,67,50,0.1);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lp-search-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 16px 48px rgba(27,67,50,0.14);
+    }
+    .lp-search-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .lp-search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .lp-search-box textarea {
+      width: 100%;
+      min-height: 64px;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text-dark);
+      border: 0;
+      outline: none;
+      resize: none;
+      background: transparent;
+      padding: 0;
+    }
+    .lp-search-box textarea::placeholder {
+      color: #aab8b2;
+    }
+    .lp-search-btn {
+      white-space: nowrap;
+      border: 0;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      padding: 14px 22px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.15s;
+      line-height: 1;
+    }
+    .lp-search-btn:hover { background: var(--primary-hover); }
+    .lp-search-btn:active { transform: scale(0.97); }
+    .lp-search-btn .btn-arrow {
+      display: grid; place-items: center;
+      width: 22px; height: 22px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .lp-search-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .lp-search-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .lp-ai-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+    }
+
+    /* Suggestion chips */
+    .lp-chips {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 16px;
+      animation: fadeSlideUp 0.7s 0.4s ease both;
+    }
+    .lp-chips button {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      padding: 6px 13px;
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .lp-chips button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    /* ─── TRUST BAR ─── */
+    .lp-trust {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      padding: 28px max(24px, calc((100vw - 1100px) / 2));
+    }
+    .lp-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .lp-trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .lp-trust-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: var(--primary-light);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+    }
+    .lp-trust-item strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+    .lp-trust-item span {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* ─── DESTINATION CARDS ─── */
+    .lp-destinations {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 72px 24px;
+    }
+    .lp-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .lp-section-head h2 {
+      font-family: var(--font-serif);
+      font-size: 38px;
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+    .lp-section-head h2 em { color: var(--primary); font-style: italic; }
+    .lp-see-all {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s;
+    }
+    .lp-see-all:hover { gap: 8px; }
+
+    .lp-dest-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .lp-dest-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 3/4;
+      background: var(--bg-subtle);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .lp-dest-card:hover { transform: translateY(-6px); }
+    .lp-dest-card:hover .dest-img { transform: scale(1.06); }
+    .lp-dest-card.large { aspect-ratio: 3/5; }
+    .lp-dest-card.tall { grid-row: span 2; aspect-ratio: unset; }
+
+    .dest-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .dest-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(15,35,25,0.85) 0%, rgba(15,35,25,0.1) 55%, transparent 100%);
+    }
+    .dest-info {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      padding: 20px 18px;
+      color: #fff;
+    }
+    .dest-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+    .dest-name {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .dest-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dest-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+    }
+    .dest-badge {
+      font-size: 10px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 3px 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ─── FEATURED STORY ─── */
+    .lp-story {
+      background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+      margin: 0;
+      padding: 80px max(24px, calc((100vw - 1100px) / 2));
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .lp-story-text {
+      color: #fff;
+    }
+    .lp-story-text .lp-pill {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85);
+    }
+    .lp-story-text .lp-pill .dot {
+      background: #c8f5d8;
+    }
+    .lp-story-text h2 {
+      font-family: var(--font-serif);
+      font-size: 46px;
+      line-height: 1.07;
+      margin: 0 0 16px;
+      font-style: italic;
+    }
+    .lp-story-text p {
+      font-size: 15px;
+      line-height: 1.65;
+      opacity: 0.75;
+      margin-bottom: 28px;
+      max-width: 440px;
+    }
+    .lp-story-ctas {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .lp-story-btn-primary {
+      background: #fff;
+      color: var(--primary);
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 22px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .lp-story-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .lp-story-btn-ghost {
+      color: rgba(255,255,255,0.8);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.2s;
+    }
+    .lp-story-btn-ghost:hover { color: #fff; border-color: #fff; }
+
+    .lp-story-photos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .lp-story-photo {
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.1);
+    }
+    .lp-story-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .lp-story-photo:first-child {
+      grid-row: span 2;
+      height: 320px;
+    }
+    .lp-story-photo:not(:first-child) {
+      height: 150px;
+    }
+    .lp-story-stats {
+      display: flex;
+      gap: 28px;
+      margin-top: 28px;
+    }
+    .lp-story-stat strong {
+      display: block;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .lp-story-stat span {
+      font-size: 11px;
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── BROWSE BY FEELING ─── */
+    .lp-browse {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .lp-feeling-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .lp-feeling-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 22px 18px;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-sans);
+      transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .lp-feeling-card:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .feeling-emoji {
+      font-size: 28px;
+      line-height: 1;
+    }
+    .feeling-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+    .feeling-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .feeling-arrow {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 700;
+      margin-top: auto;
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: all 0.2s;
+    }
+    .lp-feeling-card:hover .feeling-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ─── WHY TRUSTPACK ─── */
+    .lp-why {
+      background: var(--bg-main);
+      padding: 80px max(24px, calc((100vw - 1100px) / 2));
+      border-top: 1px solid var(--border-light);
+    }
+    .lp-why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 80px;
+      align-items: flex-start;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .lp-why-heading h2 {
+      font-family: var(--font-serif);
+      font-size: 42px;
+      line-height: 1.08;
+      margin: 0 0 16px;
+      letter-spacing: -0.03em;
+    }
+    .lp-why-heading p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+      margin: 0 0 28px;
+    }
+    .lp-why-points {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .lp-why-point {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border-light);
+      align-items: flex-start;
+    }
+    .lp-why-point:last-child { border-bottom: 0; }
+    .lp-why-num {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      opacity: 0.25;
+      line-height: 1;
+      padding-top: 2px;
+    }
+    .lp-why-point h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      color: var(--text-dark);
+    }
+    .lp-why-point p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    /* ─── FOOTER ─── */
+    .lp-footer {
+      background: var(--text-dark);
+      padding: 40px max(24px, calc((100vw - 1100px) / 2));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .lp-footer-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lp-footer-brand .brand-mark {
+      background: rgba(255,255,255,0.15);
+    }
+    .lp-footer p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin: 0;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .lp-trust-grid { grid-template-columns: repeat(2, 1fr); }
+      .lp-dest-grid { grid-template-columns: repeat(2, 1fr); }
+      .lp-feeling-grid { grid-template-columns: repeat(2, 1fr); }
+      .lp-story { grid-template-columns: 1fr; gap: 40px; }
+      .lp-why-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 600px) {
+      .lp-h1 { font-size: 40px; }
+      .lp-dest-grid { grid-template-columns: 1fr; }
+      .lp-trust-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .lp-feeling-grid { grid-template-columns: 1fr 1fr; }
+      .lp-story-photos { grid-template-columns: 1fr; }
+      .lp-story-photo:first-child { height: 220px; }
+      .lp-story-photo:not(:first-child) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">t</span>
+      <span>trustpack</span>
+    </a>
+    <nav class="topnav">
+      <a href="results.html">Browse trips</a>
+      <a href="#why">Why trustpack</a>
+      <a href="saved.html">Saved <span class="nav-count">0</span></a>
+    </nav>
+    <button class="avatar" title="Account">AS</button>
+  </header>
+
+  <main>
+
+    <!-- ═══ HERO ═══ -->
+    <section class="lp-hero">
+      <div class="lp-hero-inner">
+
+        <div class="lp-pill">
+          <span class="dot"></span>
+          ✦ Exploratory Travel Search · Built for First-Timers
+        </div>
+
+        <h1 class="lp-h1">
+          Tell us the feeling.<br>
+          <em>We'll find the trip.</em>
+        </h1>
+
+        <p class="lp-subtitle">
+          No airport codes. No endless filters. Just describe what you're looking for — vibe, budget, pace, group — and get honest, all-in package options with zero hidden fees.
+        </p>
+
+        <!-- Context selectors -->
+        <div class="lp-context-row">
+          <div class="ctx-item">
+            <span>✦ Flying from</span>
+            <select id="airport-select" aria-label="Starting airport">
+              <option value="BLR">Bengaluru (BLR)</option>
+              <option value="DEL">Delhi (DEL)</option>
+              <option value="BOM">Mumbai (BOM)</option>
+              <option value="HYD">Hyderabad (HYD)</option>
+              <option value="MAA">Chennai (MAA)</option>
+            </select>
+          </div>
+          <span class="ctx-sep">·</span>
+          <div class="ctx-item">
+            <span>Guests</span>
+            <select id="adults-select" aria-label="Number of adults">
+              <option value="1">1 Adult</option>
+              <option value="2" selected>2 Adults</option>
+              <option value="3">3 Adults</option>
+              <option value="4">4 Adults</option>
+              <option value="5">5 Adults</option>
+              <option value="6">6 Adults</option>
+              <option value="8">8 Adults</option>
+            </select>
+            <span>·</span>
+            <select id="rooms-select" aria-label="Number of rooms">
+              <option value="1" selected>1 Room</option>
+              <option value="2">2 Rooms</option>
+              <option value="3">3 Rooms</option>
+            </select>
+          </div>
+          <span class="ctx-sep">·</span>
+          <div class="ctx-item">
+            <select id="travel-mode" aria-label="Transport option">
+              <option value="flights">✈ Flights included</option>
+              <option value="ground">🚂 Train / road</option>
+              <option value="self">🚗 I'll arrange</option>
+            </select>
+          </div>
+          <span class="ctx-sep">·</span>
+          <div class="ctx-item">
+            <span>📅</span>
+            <input type="date" id="depart-date" aria-label="Departure date">
+            <span>–</span>
+            <select id="trip-duration" aria-label="Trip duration">
+              <option value="3">3 days</option>
+              <option value="5" selected>5 days</option>
+              <option value="7">7 days</option>
+              <option value="10">10 days</option>
+              <option value="14">2 weeks</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Search box -->
+        <div class="lp-search-wrap">
+          <form id="trip-form" class="lp-search-box">
+            <div class="lp-search-label">✦ Your trip brief</div>
+            <div class="lp-search-row">
+              <textarea
+                id="brief"
+                placeholder="e.g. 3 friends from Bengaluru, ₹45k budget, looking for a quiet beach or backwaters with good food..."
+                aria-label="Your trip brief"
+              ></textarea>
+              <button type="submit" class="lp-search-btn">
+                Find my trip
+                <span class="btn-arrow">→</span>
+              </button>
+            </div>
+            <div class="lp-search-footer">
+              <div class="lp-search-footer-left">
+                <span class="lp-ai-dot">✦ AI</span>
+                Understands vibe, budget, pace &amp; group context
+              </div>
+              <span id="brief-count" style="color: var(--text-muted);">0/500</span>
+            </div>
+          </form>
+        </div>
+
+        <!-- Quick suggestion chips -->
+        <div class="lp-chips" id="suggestions">
+          <button type="button" data-suggestion="beach">🏖 Quiet beach · ₹35k</button>
+          <button type="button" data-suggestion="mountains">🏔 Himalayan retreat</button>
+          <button type="button" data-suggestion="international">🌏 First international trip</button>
+          <button type="button" data-suggestion="food">🍜 Foodie city break</button>
+          <button type="button" data-suggestion="culture">🏰 Desert + culture</button>
+          <button type="button" data-suggestion="island">🐠 Island snorkelling</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══ TRUST BAR ═══ -->
+    <section class="lp-trust">
+      <div class="lp-trust-grid">
+        <div class="lp-trust-item">
+          <div class="lp-trust-icon">🎯</div>
+          <div>
+            <strong>All-in prices</strong>
+            <span>Flights, stays, transfers and taxes inside the number. No surprises.</span>
+          </div>
+        </div>
+        <div class="lp-trust-item">
+          <div class="lp-trust-icon">✅</div>
+          <div>
+            <strong>Verified operators</strong>
+            <span>Real reviews from vetted, authentic local travel partners.</span>
+          </div>
+        </div>
+        <div class="lp-trust-item">
+          <div class="lp-trust-icon">🔒</div>
+          <div>
+            <strong>24-hr free hold</strong>
+            <span>Lock in price and availability for 24 hours — zero payment required.</span>
+          </div>
+        </div>
+        <div class="lp-trust-item">
+          <div class="lp-trust-icon">↩️</div>
+          <div>
+            <strong>Free cancellation</strong>
+            <span>Change your mind up to 7 days before departure, no questions asked.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ DESTINATION GRID ═══ -->
+    <section class="lp-destinations">
+      <div class="lp-section-head">
+        <div>
+          <p class="clean-kicker" style="justify-content: flex-start; margin-bottom: 8px;">✦ Trending this season</p>
+          <h2>Top picks, <em>right now.</em></h2>
+        </div>
+        <a href="results.html" class="lp-see-all">Browse all packages →</a>
+      </div>
+
+      <div class="lp-dest-grid">
+
+        <!-- Kerala - tall card -->
+        <div class="lp-dest-card" style="grid-row: span 2;" onclick="location.href='detail.html?id=kerala'">
+          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80');"></div>
+          <div class="dest-overlay"></div>
+          <div class="dest-info">
+            <div class="dest-tag">Nature · India</div>
+            <div class="dest-name">Kerala Backwaters</div>
+            <div class="dest-meta">
+              <span class="dest-price">from ₹22,000 p.p.</span>
+              <span class="dest-badge">★ 4.9</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Goa -->
+        <div class="lp-dest-card" onclick="location.href='detail.html?id=goa'">
+          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=700&q=80');"></div>
+          <div class="dest-overlay"></div>
+          <div class="dest-info">
+            <div class="dest-tag">Beach · India</div>
+            <div class="dest-name">Goa Weekender</div>
+            <div class="dest-meta">
+              <span class="dest-price">from ₹11,400 p.p.</span>
+              <span class="dest-badge">★ 4.7</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bali -->
+        <div class="lp-dest-card" onclick="location.href='detail.html?id=bali'">
+          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=700&q=80');"></div>
+          <div class="dest-overlay"></div>
+          <div class="dest-info">
+            <div class="dest-tag">International · Beach</div>
+            <div class="dest-name">Bali Escape</div>
+            <div class="dest-meta">
+              <span class="dest-price">from ₹44,000 p.p.</span>
+              <span class="dest-badge">★ 4.8</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Himachal -->
+        <div class="lp-dest-card" onclick="location.href='detail.html?id=himachal'">
+          <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=700&q=80');"></div>
+          <div class="dest-overlay"></div>
+          <div class="dest-info">
+            <div class="dest-tag">Mountains · India</div>
+            <div class="dest-name">Manali Retreat</div>
+            <div class="dest-meta">
+              <span class="dest-price">from ₹18,500 p.p.</span>
+              <span class="dest-badge">★ 4.7</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══ FEATURED STORY ═══ -->
+    <section class="lp-story">
+      <div class="lp-story-text">
+        <div class="lp-pill">
+          <span class="dot"></span>
+          ✦ Editor's Pick
+        </div>
+        <h2>Four slow days on the Alleppey backwaters</h2>
+        <p>Private luxury houseboats, coconut groves, and water that moves slower than time. Kerala's backwaters are best experienced without a schedule — this package makes that easy.</p>
+        <div class="lp-story-ctas">
+          <a href="detail.html?id=kerala" class="lp-story-btn-primary">
+            View Kerala package <span>→</span>
+          </a>
+          <a href="results.html" class="lp-story-btn-ghost">Browse all packages</a>
+        </div>
+        <div class="lp-story-stats">
+          <div class="lp-story-stat">
+            <strong>4.9</strong>
+            <span>Rating</span>
+          </div>
+          <div class="lp-story-stat">
+            <strong>6 days</strong>
+            <span>Duration</span>
+          </div>
+          <div class="lp-story-stat">
+            <strong>₹22k</strong>
+            <span>Per person</span>
+          </div>
+        </div>
+      </div>
+      <div class="lp-story-photos">
+        <div class="lp-story-photo">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=500&h=700&q=80" alt="Kerala houseboat on backwaters" loading="lazy">
+        </div>
+        <div class="lp-story-photo">
+          <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=400&h=280&q=80" alt="Kerala coconut groves" loading="lazy">
+        </div>
+        <div class="lp-story-photo">
+          <img src="https://images.unsplash.com/photo-1624821558130-b325d7946fc4?auto=format&fit=crop&w=400&h=280&q=80" alt="Kerala cuisine" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ BROWSE BY FEELING ═══ -->
+    <section class="lp-browse">
+      <div class="lp-section-head">
+        <div>
+          <p class="clean-kicker" style="justify-content: flex-start; margin-bottom: 8px;">✦ Not sure where yet?</p>
+          <h2>Browse by <em>feeling.</em></h2>
+        </div>
+      </div>
+      <div class="lp-feeling-grid">
+        <button class="lp-feeling-card" data-suggestion="slow" type="button">
+          <div class="feeling-emoji">🛶</div>
+          <div class="feeling-title">Slow + scenic</div>
+          <div class="feeling-desc">Houseboats, hill trains, countryside drives — no agenda, just pace.</div>
+          <div class="feeling-arrow">→</div>
+        </button>
+        <button class="lp-feeling-card" data-suggestion="food" type="button">
+          <div class="feeling-emoji">🍜</div>
+          <div class="feeling-title">Food + culture</div>
+          <div class="feeling-desc">French Quarter cafés, street food trails, palace forts and heritage walks.</div>
+          <div class="feeling-arrow">→</div>
+        </button>
+        <button class="lp-feeling-card" data-suggestion="beach" type="button">
+          <div class="feeling-emoji">🏝</div>
+          <div class="feeling-title">Beach, but quieter</div>
+          <div class="feeling-desc">No party scene. Just good water, good light, and a proper resort stay.</div>
+          <div class="feeling-arrow">→</div>
+        </button>
+        <button class="lp-feeling-card" data-suggestion="international" type="button">
+          <div class="feeling-emoji">🌏</div>
+          <div class="feeling-title">First-time adventure</div>
+          <div class="feeling-desc">Bali, Vietnam or Andaman — first international trip, fully guided and stress-free.</div>
+          <div class="feeling-arrow">→</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══ WHY TRUSTPACK ═══ -->
+    <section id="why" class="lp-why">
+      <div class="lp-why-grid">
+        <div class="lp-why-heading">
+          <p class="clean-kicker" style="justify-content: flex-start;">✦ Why trustpack</p>
+          <h2>First trips shouldn't feel like homework.</h2>
+          <p>We built Trustpack because the best travel moments come from intent — not from accidentally choosing the wrong operator at 1am on an OTA.</p>
+          <a href="results.html" class="primary-button" style="text-decoration: none; height: 44px; margin-top: 8px; display: inline-flex;">Start exploring →</a>
+        </div>
+        <div class="lp-why-points">
+          <div class="lp-why-point">
+            <div class="lp-why-num">01</div>
+            <div>
+              <h3>You start with a feeling, not a form</h3>
+              <p>Type what you're looking for in plain language — budget, vibe, group size, pace. We handle the matching so you never have to scroll through 200 filters.</p>
+            </div>
+          </div>
+          <div class="lp-why-point">
+            <div class="lp-why-num">02</div>
+            <div>
+              <h3>Top 3 curated, not 300 options</h3>
+              <p>We default to your best 3 matches instead of an infinite scroll. Less decision anxiety. More confidence. Expand to see all packages anytime.</p>
+            </div>
+          </div>
+          <div class="lp-why-point">
+            <div class="lp-why-num">03</div>
+            <div>
+              <h3>Zero hidden fees — ever</h3>
+              <p>Every price includes flights, hotel, transfers, activities and GST. The number you see is the number you pay. No surprises at checkout.</p>
+            </div>
+          </div>
+          <div class="lp-why-point">
+            <div class="lp-why-num">04</div>
+            <div>
+              <h3>Hold it, then decide</h3>
+              <p>Claim a 24-hour free hold on any package. Price and availability are locked — no credit card, no commitment. Decide when you're ready.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="lp-footer">
+    <a href="index.html" class="lp-footer-brand">
+      <span class="brand-mark">t</span>
+      trustpack
+    </a>
+    <p>A prototype for first-time travel package buyers. Built with care.</p>
+  </footer>
+
+  <script src="js/storage.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trustpack · Package Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">t</span>
+      <span>trustpack</span>
+    </a>
+    <nav class="topnav">
+      <a href="results.html">Browse trips</a>
+      <a href="index.html#why">Why trustpack</a>
+      <a href="saved.html">Saved <span class="nav-count">0</span></a>
+    </nav>
+    <button class="avatar" title="Account">AS</button>
+  </header>
+
+
+  <main class="detail-page">
+    <a href="results.html" id="back-results" class="back-link">← Back to results</a>
+
+    <!-- Detail Hero -->
+    <div class="detail-hero">
+      <div>
+        <p class="eyebrow" id="detail-place" style="justify-content: flex-start;">Loading package...</p>
+        <h1 id="detail-title">Package Title</h1>
+        <p id="detail-summary">Package brief summary...</p>
+        <div class="detail-meta">
+          <strong id="detail-rating">★ 4.8</strong>
+          <span id="detail-reviews">(342 reviewers)</span>
+          <span>·</span>
+          <span id="detail-days">3 days · 2 nights</span>
+          <span>·</span>
+          <span id="detail-operator">Verified Partner</span>
+        </div>
+      </div>
+      <div class="detail-cover" id="detail-cover"></div>
+    </div>
+
+    <!-- Detail Content Layout -->
+    <div class="detail-layout">
+      <section>
+        <!-- Inclusions -->
+        <div class="detail-section">
+          <p class="eyebrow" style="justify-content: flex-start;">What’s included</p>
+          <h2>No sneaky extras.</h2>
+          <p class="section-lede">Everything below is inside the sticker price. If it’s not on the ✓ list, it isn’t included.</p>
+          <ul class="big-list" id="inclusions-list"></ul>
+        </div>
+
+        <!-- Where You Stay -->
+        <div class="detail-section">
+          <p class="eyebrow" style="justify-content: flex-start;">Where you stay</p>
+          <div class="stay-card">
+            <div class="stay-image" id="stay-image"></div>
+            <div>
+              <p class="eyebrow" style="justify-content: flex-start; margin-bottom: 4px;">Verified Accommodation</p>
+              <h3 id="stay-name">Hotel Name</h3>
+              <p id="stay-location">Location</p>
+              <div class="amenities" id="stay-amenities"></div>
+              <strong>★ <span id="stay-rating">4.8</span> <small style="font-weight:400; color:var(--text-muted);">hotel score</small></strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- How You Get There -->
+        <div class="detail-section transport">
+          <p class="eyebrow" style="justify-content: flex-start;">How you get there</p>
+          <h3>Simple, bundled transport</h3>
+          <div class="transport-row">
+            <div style="display: flex; flex-direction: column;">
+              <strong id="transport-airline" style="font-size: 14px; color: var(--primary);">Airline Flight</strong>
+              <span id="transport-route" style="font-size: 12px; color: var(--text-muted);">Route details</span>
+            </div>
+            <span id="transport-duration" style="font-size: 12px; font-weight: 600;">Direct</span>
+            <b id="transport-badge">✓ Bundled</b>
+          </div>
+          <p class="fine-print" id="transport-notes" style="margin-top: 10px;">Airport pickup and drop included via dedicated AC driver.</p>
+        </div>
+
+        <!-- Day by Day Rhythm -->
+        <div class="detail-section rhythm">
+          <p class="eyebrow" style="justify-content: flex-start;">The rhythm</p>
+          <h2>Day by day</h2>
+          <div id="itinerary-timeline"></div>
+        </div>
+      </section>
+
+      <!-- Price Rail -->
+      <aside class="price-rail">
+        <div class="price-rail-inner">
+          <p class="eyebrow" style="justify-content: flex-start; margin-bottom: 4px;">All-in package price</p>
+          <div class="rail-total">
+            <span id="rail-total-price">₹0</span>
+            <small id="rail-per-person">total · ₹0 p.p.</small>
+          </div>
+
+          <div id="rail-breakdown"></div>
+
+          <div class="rail-line total-border">
+            <span>All-in Total</span>
+            <strong id="rail-final-total">₹0</strong>
+          </div>
+
+          <button class="primary-button book-button" id="book-btn">Book / Hold this trip <span>→</span></button>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <button class="save-detail" id="save-btn" style="flex: 1;">♡ Save for later</button>
+            <button id="share-detail-btn" style="flex: 1; border: 1px solid var(--border-light); background: var(--bg-card); color: var(--primary); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px;">🔗 Share with squad</button>
+          </div>
+
+          <p class="cancel-note" style="margin-top: 14px; font-size: 11px; color: var(--text-muted); text-align: center;">
+            Free 24-hour hold. Free cancellation up to 7 days before departure. Taxes and fees inside the number.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Interactive Booking / Hold Modal -->
+  <div class="modal-overlay" id="booking-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+      <p class="eyebrow" style="justify-content: flex-start; margin-bottom: 6px;">✦ Trustpack 24-Hour Free Hold</p>
+      <h2 id="modal-trip-title">Hold Your Package</h2>
+      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Lock in this exact price and availability for 24 hours with no payment required.</p>
+
+      <div style="background: var(--primary-light); padding: 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; color: var(--primary);">
+          <span>Total Locked Price:</span>
+          <span id="modal-price">₹0</span>
+        </div>
+        <span style="font-size: 11px; color: var(--text-muted);">Includes flights, stays, transfers & GST. Zero hidden fees.</span>
+      </div>
+
+      <form id="hold-form" style="display: flex; flex-direction: column; gap: 12px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Full Name</label>
+          <input type="text" id="hold-name" required placeholder="e.g. Ananya Sharma" style="width: 100%; border: 1px solid var(--border-light); padding: 10px; border-radius: 6px; outline: none; font-family: var(--font-sans);">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Email or Phone</label>
+          <input type="text" id="hold-contact" required placeholder="e.g. ananya@example.com" style="width: 100%; border: 1px solid var(--border-light); padding: 10px; border-radius: 6px; outline: none; font-family: var(--font-sans);">
+        </div>
+        <button type="submit" class="primary-button" style="height: 44px; margin-top: 8px;">Confirm 24-Hour Free Hold <span>→</span></button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/trips-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script>
+    const query = new URLSearchParams(location.search);
+    const tripId = query.get('id') || 'goa';
+    const briefParam = query.get('brief') || '';
+    const adultsParam = query.get('adults') || '2';
+    const roomsParam = query.get('rooms') || '1';
+    const departParam = query.get('depart') || '';
+    const durationParam = query.get('duration') || '5';
+    const modeParam = query.get('mode') || 'flights';
+
+    function formatDepartDate(iso, dur) {
+      if (!iso) return '';
+      const d = new Date(iso + 'T00:00:00');
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const returnD = new Date(d);
+      returnD.setDate(d.getDate() + Number(dur));
+      return `📅 ${d.getDate()} ${months[d.getMonth()]}–${returnD.getDate()} ${months[returnD.getMonth()]} · `;
+    }
+
+    function formatMoney(amount) {
+      if (amount >= 100000) return '₹' + (amount / 100000).toFixed(1) + 'L';
+      return '₹' + Math.round(amount / 1000).toLocaleString() + 'k';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Find trip data
+      const trip = TRIPS.find(t => t.id === tripId) || TRIPS[0];
+
+      // Update Back link
+      const backLink = document.getElementById('back-results');
+      if (backLink && briefParam) {
+        backLink.href = `results.html?brief=${encodeURIComponent(briefParam)}&adults=${adultsParam}&rooms=${roomsParam}&depart=${departParam}&duration=${durationParam}&mode=${modeParam}`;
+      }
+
+      // Render Hero info
+      document.title = `Trustpack · ${trip.name}`;
+      document.getElementById('detail-title').textContent = trip.name;
+      document.getElementById('detail-place').textContent = `${trip.place} · ${trip.country}`;
+      document.getElementById('detail-summary').textContent = trip.copy;
+      document.getElementById('detail-rating').textContent = `★ ${trip.rating}`;
+      document.getElementById('detail-reviews').textContent = `(${trip.reviewsCount} reviewers)`;
+      
+      const dateText = formatDepartDate(departParam, durationParam);
+      document.getElementById('detail-days').textContent = `${dateText}${trip.days} · ${adultsParam} Guest${Number(adultsParam)>1?'s':''}, ${roomsParam} Room${Number(roomsParam)>1?'s':''}`;
+      document.getElementById('detail-operator').textContent = trip.operator;
+      document.getElementById('detail-cover').style.backgroundImage = `url('${trip.img}')`;
+
+
+      // Render Inclusions
+      const inclusionsList = document.getElementById('inclusions-list');
+      if (inclusionsList) {
+        let inclusions = [...trip.inclusions];
+        if (modeParam === 'self') {
+          inclusions[0] = '🚗 Self-arranged main travel (Hotel & airport transfers included)';
+        } else if (modeParam === 'ground') {
+          inclusions[0] = '🚂 Reserved Express Train / AC Volvo Bus tickets';
+        }
+        let items = inclusions.map(inc => `<li>${inc}</li>`).join('');
+        if (trip.exclusions) {
+          items += trip.exclusions.map(exc => `<li class="not-included">Excludes: ${exc}</li>`).join('');
+        }
+        inclusionsList.innerHTML = items;
+      }
+
+      // Render Stay Info
+      document.getElementById('stay-name').textContent = trip.stay.name;
+      document.getElementById('stay-location').textContent = trip.stay.location;
+      document.getElementById('stay-rating').textContent = trip.stay.rating;
+      document.getElementById('stay-image').style.backgroundImage = `url('${trip.stay.img}')`;
+      document.getElementById('stay-amenities').innerHTML = trip.stay.amenities.map(a => `<span>${a}</span>`).join('');
+
+      // Render Transport Info
+      const tBadge = document.getElementById('transport-badge');
+      if (modeParam === 'self') {
+        document.getElementById('transport-airline').textContent = 'Self-Arranged Travel';
+        document.getElementById('transport-route').textContent = 'Main travel arranged by you';
+        document.getElementById('transport-duration').textContent = 'Flexible';
+        document.getElementById('transport-notes').textContent = 'Local hotel pick-up & drop included via dedicated AC driver.';
+        if (tBadge) tBadge.textContent = '🚗 Self Travel';
+      } else if (modeParam === 'ground') {
+        document.getElementById('transport-airline').textContent = 'Express Train / AC Volvo Bus';
+        document.getElementById('transport-route').textContent = 'Reserved berths / AC luxury seater';
+        document.getElementById('transport-duration').textContent = 'Overnight / Scenic';
+        document.getElementById('transport-notes').textContent = 'Station / bus stand pick-up & drop included.';
+        if (tBadge) tBadge.textContent = '🚂 Train / Road Bundled';
+      } else {
+        document.getElementById('transport-airline').textContent = trip.transport.airline;
+        document.getElementById('transport-route').textContent = trip.transport.route;
+        document.getElementById('transport-duration').textContent = trip.transport.duration;
+        document.getElementById('transport-notes').textContent = trip.transport.notes;
+        if (tBadge) {
+          const airline = (trip.transport.airline || '').toLowerCase();
+          if (airline.includes('road') || airline.includes('drive') || airline.includes('self')) {
+            tBadge.textContent = '🚗 Road trip bundled';
+          } else if (airline.includes('ferry') || airline.includes('ship')) {
+            tBadge.textContent = '⛴ Ferry bundled';
+          } else if (trip.transport.stops && trip.transport.stops > 0) {
+            tBadge.textContent = `✓ ${trip.transport.stops}-stop flight bundled`;
+          } else {
+            tBadge.textContent = '✓ Non-stop flight bundled';
+          }
+        }
+      }
+
+      // Render Itinerary Timeline
+      const timelineEl = document.getElementById('itinerary-timeline');
+      if (timelineEl && trip.itinerary) {
+        timelineEl.innerHTML = trip.itinerary.map(day => `
+          <div class="dayline">
+            <b>${day.day}</b>
+            <div>
+              <h3>${day.title}</h3>
+              <p><strong>Morning ·</strong> ${day.morning}</p>
+              <p><strong>Afternoon ·</strong> ${day.afternoon}</p>
+              ${day.evening ? `<p><strong>Evening ·</strong> ${day.evening}</p>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Price Rail
+      const numAdults = Number(adultsParam) || 2;
+      const numRooms = Number(roomsParam) || Math.ceil(numAdults / 2);
+      const baseFlightPP = trip.priceBreakdown ? Math.round(trip.priceBreakdown[0].cost / 2) : 4300;
+      
+      let effectivePP = trip.perPersonPrice;
+      if (modeParam === 'self') {
+        effectivePP = Math.max(3000, trip.perPersonPrice - baseFlightPP);
+      } else if (modeParam === 'ground') {
+        effectivePP = Math.max(4500, trip.perPersonPrice - Math.round(baseFlightPP * 0.6));
+      }
+      const totalTripPrice = effectivePP * numAdults;
+
+      document.getElementById('rail-total-price').textContent = `₹${totalTripPrice.toLocaleString()}`;
+      document.getElementById('rail-per-person').textContent = `total for ${numAdults} adults (${numRooms} Room${numRooms > 1 ? 's' : ''}) · ₹${effectivePP.toLocaleString()} p.p.`;
+      document.getElementById('rail-final-total').textContent = `₹${totalTripPrice.toLocaleString()}`;
+
+      const breakdownEl = document.getElementById('rail-breakdown');
+      if (breakdownEl && trip.priceBreakdown) {
+        const baseAdults = trip.baseAdults || 2;
+        // Filter out flight item completely if travel mode is 'self' (I'll arrange my travel)
+        const activeItems = trip.priceBreakdown.filter((_, idx) => !(idx === 0 && modeParam === 'self'));
+
+        breakdownEl.innerHTML = activeItems.map((item, idx) => {
+          let itemName = item.item;
+          let itemNote = item.note;
+          let itemCost = item.isFixed
+            ? item.cost
+            : Math.round((item.cost / baseAdults) * numAdults);
+
+          // If main transport item and mode is ground (Train/Road)
+          if (idx === 0 && modeParam === 'ground') {
+            itemName = 'Express Train / AC Volvo Bus';
+            itemNote = 'Reserved berths / tickets included';
+            itemCost = Math.round(itemCost * 0.4);
+          }
+
+          return `
+            <div class="rail-line">
+              <span>${itemName}</span>
+              <strong>₹${itemCost.toLocaleString()}</strong>
+            </div>
+            <small>${itemNote}</small>
+          `;
+        }).join('');
+      }
+
+
+      // Save Button
+      const saveBtn = document.getElementById('save-btn');
+      function updateSaveButton() {
+        const saved = isTripSaved(trip.id);
+        saveBtn.textContent = saved ? '♥ Saved in your shortlist' : '♡ Save for later';
+        saveBtn.style.background = saved ? 'var(--primary-light)' : 'transparent';
+      }
+      updateSaveButton();
+
+      saveBtn.addEventListener('click', () => {
+        const nowSaved = toggleSaveTrip(trip.id);
+        updateSaveButton();
+        showToast(nowSaved ? 'Package saved to your shortlist!' : 'Package removed from shortlist');
+      });
+
+      // Share Package Button
+      const shareDetailBtn = document.getElementById('share-detail-btn');
+      if (shareDetailBtn) {
+        shareDetailBtn.addEventListener('click', () => {
+          const shareUrl = window.location.href;
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(shareUrl);
+          }
+          const text = encodeURIComponent(`Check out this travel package on Trustpack: ${trip.name} for ₹${totalTripPrice.toLocaleString()} total! ${shareUrl}`);
+          if (window.innerWidth < 600) {
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+          }
+          showToast('🔗 Package link copied! Share it with your squad 🚀');
+        });
+      }
+
+      // Booking Modal Logic
+      const bookBtn = document.getElementById('book-btn');
+      const bookingModal = document.getElementById('booking-modal');
+      const modalCloseBtn = document.getElementById('modal-close-btn');
+      const holdForm = document.getElementById('hold-form');
+
+      if (bookBtn && bookingModal) {
+        bookBtn.addEventListener('click', () => {
+          document.getElementById('modal-trip-title').textContent = `Hold ${trip.name}`;
+          document.getElementById('modal-price').textContent = `₹${totalTripPrice.toLocaleString()} (${numAdults} Adults, ${numRooms} Room${numRooms > 1 ? 's' : ''})`;
+          bookingModal.classList.add('active');
+        });
+      }
+
+
+
+      if (modalCloseBtn && bookingModal) {
+        modalCloseBtn.addEventListener('click', () => {
+          bookingModal.classList.remove('active');
+        });
+      }
+
+      if (holdForm) {
+        holdForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          bookingModal.classList.remove('active');
+          // Only save — never unsave — when confirming a hold
+          if (!isTripSaved(trip.id)) {
+            toggleSaveTrip(trip.id);
+          }
+          updateSaveButton();
+          showToast(`✅ 24-hour hold confirmed for ${trip.name}! Check your shortlist.`);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
