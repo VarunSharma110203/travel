@@ -67,27 +67,41 @@ function parseBrief(text) {
     || null;
 
   let group = 'all';
-  if (/friends?/i.test(lower)) group = 'friends';
-  else if (/couple|wife|husband|honeymoon/i.test(lower)) group = 'couple';
-  else if (/family|kids?|children/i.test(lower)) group = 'family';
-  else if (/solo|myself|alone/i.test(lower)) group = 'solo';
+  let groupTypeLabel = 'Guests';
+  if (/friends?|buddies|squad|college/i.test(lower)) { group = 'friends'; groupTypeLabel = 'Squad Trip'; }
+  else if (/couple|wife|husband|honeymoon|romantic/i.test(lower)) { group = 'couple'; groupTypeLabel = 'Couple Getaway'; }
+  else if (/family|kids?|children|parents/i.test(lower)) { group = 'family'; groupTypeLabel = 'Family Vacation'; }
+  else if (/solo|myself|alone/i.test(lower)) { group = 'solo'; groupTypeLabel = 'Solo Stroll'; }
 
   // Extract guest count from brief text (e.g. "3 friends", "4 adults", "3 guests", "5 people")
-  const guestMatch = lower.match(/(\d+)\s*(?:friends?|adults?|guests?|people|pax)/i);
+  const guestMatch = lower.match(/(\d+)\s*(?:friends?|adults?|guests?|people|pax|buddies)/i);
   const extractedAdults = guestMatch ? Number(guestMatch[1]) : null;
 
   let vibe = 'all';
-  if (/beach|coast|sea|resort|island/i.test(lower)) vibe = 'beach';
-  else if (/culture|food|heritage|palace|french/i.test(lower)) vibe = 'culture';
-  else if (/mountain|pine|hills|snow|valley/i.test(lower)) vibe = 'mountains';
-  else if (/nature|houseboat|backwaters|forest/i.test(lower)) vibe = 'nature';
+  let vibeLabel = null;
+  if (/beach|coast|sea|resort|island|reef|waves/i.test(lower)) { vibe = 'beach'; vibeLabel = '🏖 Coastal & Beach Vibe'; }
+  else if (/culture|food|heritage|palace|french|bakery|fort/i.test(lower)) { vibe = 'culture'; vibeLabel = '🏰 Culture & Foodie'; }
+  else if (/mountain|pine|hills|snow|valley|chalet|trek/i.test(lower)) { vibe = 'mountains'; vibeLabel = '🏔 Himalayan & Pine Valley'; }
+  else if (/nature|houseboat|backwaters|forest|lake/i.test(lower)) { vibe = 'nature'; vibeLabel = '🛶 Scenic Houseboat & Nature'; }
+
+  // Extract special activity keywords
+  const activities = [];
+  if (/pool|villa/i.test(lower)) activities.push('🏊 Private Pool');
+  if (/snorkel|dive|coral/i.test(lower)) activities.push('🏓 Coral Snorkelling');
+  if (/houseboat|lagoon/i.test(lower)) activities.push('🛶 Luxury Houseboat');
+  if (/café|bakery|food/i.test(lower)) activities.push('🥐 Café Crawl');
+  if (/surf|waves/i.test(lower)) activities.push('🏄 Surfing');
+  if (/yoga|spa/i.test(lower)) activities.push('🧘 Wellness & Yoga');
 
   return {
     budget: extractedBudget,
     dates: datesMatch,
     group: group,
+    groupTypeLabel: groupTypeLabel,
     extractedAdults: extractedAdults,
     vibe: vibe,
+    vibeLabel: vibeLabel,
+    activities: activities,
     isPerPerson: /per\s*person|p\.p\.?|each/i.test(lower),
     // Ambiguous only if BOTH text-dates and structured date are missing
     isAmbiguous: !datesMatch && !currentDepart && !extractedBudget
@@ -119,7 +133,7 @@ function calculateDynamicMatchScore(pkg, briefText) {
 
 function updateHeardBanner(context) {
   const tags = [`✈ ${airportNames[currentAirport] || currentAirport}`];
-  tags.push(`👥 ${currentAdults} Guest${Number(currentAdults) > 1 ? 's' : ''} · ${currentRooms} Room${Number(currentRooms) > 1 ? 's' : ''}`);
+  tags.push(`👥 ${currentAdults} ${context.groupTypeLabel || 'Guests'}`);
 
   // Structured date from picker takes priority over brief-parsed date
   const structuredDate = formatDepartDate(currentDepart);
@@ -129,20 +143,37 @@ function updateHeardBanner(context) {
     tags.push(`📅 ${context.dates}`);
   }
 
-  if (context.vibe && context.vibe !== 'all') tags.push(`✨ ${context.vibe}`);
-  if (context.budget) tags.push(`💰 ${formatMoney(context.budget)} ${context.isPerPerson ? 'p.p.' : 'total'}`);
-  if (currentMode === 'flights') tags.push('✈ Flights Included');
+  if (context.vibeLabel) {
+    tags.push(context.vibeLabel);
+  } else if (context.vibe && context.vibe !== 'all') {
+    tags.push(`✨ ${context.vibe}`);
+  }
+
+  if (context.budget) {
+    tags.push(`💰 Cap: ${formatMoney(context.budget)} ${context.isPerPerson ? 'p.p.' : 'total'}`);
+  }
+
+  if (context.activities && context.activities.length > 0) {
+    context.activities.forEach(act => tags.push(act));
+  }
+
+  if (currentMode === 'flights') {
+    tags.push('✈ Flights Included');
+  } else if (currentMode === 'self') {
+    tags.push('🚗 Self Travel');
+  }
 
   const heardTagsEl = document.getElementById('heard-tags');
   if (heardTagsEl) {
-    heardTagsEl.innerHTML = tags.map(t => `<span>${t}</span>`).join('');
+    heardTagsEl.innerHTML = tags.map(t => `<span style="background: #ffffff; border: 1px solid var(--border-light); padding: 5px 11px; border-radius: 20px; font-weight: 600; font-size: 11px; color: var(--primary);">${t}</span>`).join('');
   }
 
-  // Dynamic AI copy
+  // Dynamic AI synthesis copy
   const heardCopyEl = document.getElementById('heard-copy');
   if (heardCopyEl) {
-    const datePart = structuredDate ? ` · ${structuredDate}` : (context.dates ? ` · ${context.dates}` : '');
-    heardCopyEl.textContent = `AI matched your brief: ${airportNames[currentAirport] || currentAirport}${datePart} · ${currentAdults} guests. Here are your top packages.`;
+    const vibeStr = context.vibeLabel ? `for ${context.vibeLabel.replace(/^[^\s]+\s*/, '')}` : '';
+    const capStr = context.budget ? ` within ${formatMoney(context.budget)} cap` : '';
+    heardCopyEl.innerHTML = `<strong>✦ AI Parsed Brief:</strong> Extracted intent from <em>"${currentBrief || 'exploratory search'}"</em> — matched ${currentAdults} guests ${vibeStr}${capStr} from ${airportNames[currentAirport] || currentAirport}. Ranking top vetted options below.`;
   }
 
   // Handle Clarifying Question Card (APM requirement)
