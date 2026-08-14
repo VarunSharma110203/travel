@@ -516,8 +516,11 @@ if (typeof document !== 'undefined') {
       currentAdults = String(parsed.extractedAdults);
     }
 
-    if (parsed.budget && parsed.budget > 15000) {
-      maxBudgetCap = Math.max(parsed.budget, 60000);
+    if (parsed.budget && parsed.budget > 10000) {
+      maxBudgetCap = parsed.budget;
+      if (parsed.isPerPerson) {
+        isPerPersonMode = true;
+      }
     }
 
     // Persist user context to localStorage so saved.html can display correct prices
@@ -612,6 +615,18 @@ if (typeof document !== 'undefined') {
         if (newText) {
           currentBrief = newText;
           const newParsed = parseBrief(newText);
+          if (newParsed.budget && newParsed.budget > 10000) {
+            maxBudgetCap = newParsed.budget;
+            if (slider && budgetText) {
+              slider.value = Math.min(250, Math.max(15, Math.round(maxBudgetCap / 1000)));
+              budgetText.textContent = formatMoney(maxBudgetCap);
+            }
+          }
+          if (newParsed.extractedAdults && newParsed.extractedAdults > 0) {
+            currentAdults = String(newParsed.extractedAdults);
+            const adultsCtrl = document.getElementById('adults-control');
+            if (adultsCtrl) adultsCtrl.value = currentAdults;
+          }
           updateHeardBanner(newParsed);
           renderResults();
         }
