@@ -60,9 +60,7 @@ function submitBrief() {
   // If the brief has no date-like content, prepend the structured date
   const hasDate = /\b\d{1,2}\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|\-|–|to)\b/i.test(brief);
   if (!brief) {
-    brief = `${dateStr}, ${adults} friends, ₹45k total, open to beach or best seasonal options`;
-  } else if (!hasDate) {
-    brief = `${dateStr}, ${brief}`;
+    brief = `${adults} friends, ₹45k total, open to beach or best seasonal options`;
   }
 
   location.href = `results.html?brief=${encodeURIComponent(brief)}&airport=${airport}&mode=${mode}&adults=${adults}&rooms=${rooms}&depart=${depart.toISOString().slice(0,10)}&duration=${duration}`;
