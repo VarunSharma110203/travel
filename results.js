@@ -72,6 +72,10 @@ function parseBrief(text) {
   else if (/family|kids?|children/i.test(lower)) group = 'family';
   else if (/solo|myself|alone/i.test(lower)) group = 'solo';
 
+  // Extract guest count from brief text (e.g. "3 friends", "4 adults", "3 guests", "5 people")
+  const guestMatch = lower.match(/(\d+)\s*(?:friends?|adults?|guests?|people|pax)/i);
+  const extractedAdults = guestMatch ? Number(guestMatch[1]) : null;
+
   let vibe = 'all';
   if (/beach|coast|sea|resort|island/i.test(lower)) vibe = 'beach';
   else if (/culture|food|heritage|palace|french/i.test(lower)) vibe = 'culture';
@@ -82,6 +86,7 @@ function parseBrief(text) {
     budget: extractedBudget,
     dates: datesMatch,
     group: group,
+    extractedAdults: extractedAdults,
     vibe: vibe,
     isPerPerson: /per\s*person|p\.p\.?|each/i.test(lower),
     // Ambiguous only if BOTH text-dates and structured date are missing
@@ -474,6 +479,12 @@ function resetFilters() {
 if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
     const parsed = parseBrief(currentBrief);
+    
+    // Sync guest count from brief text if explicitly mentioned (e.g. "3 friends")
+    if (parsed.extractedAdults && parsed.extractedAdults > 0) {
+      currentAdults = String(parsed.extractedAdults);
+    }
+
     if (parsed.budget && parsed.budget > 15000) {
       maxBudgetCap = Math.max(parsed.budget, 60000);
     }

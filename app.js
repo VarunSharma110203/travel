@@ -60,7 +60,7 @@ function submitBrief() {
   // If the brief has no date-like content, prepend the structured date
   const hasDate = /\b\d{1,2}\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|\-|–|to)\b/i.test(brief);
   if (!brief) {
-    brief = `${dateStr}, 3 friends, ₹45k total, open to beach or best seasonal options`;
+    brief = `${dateStr}, ${adults} friends, ₹45k total, open to beach or best seasonal options`;
   } else if (!hasDate) {
     brief = `${dateStr}, ${brief}`;
   }
